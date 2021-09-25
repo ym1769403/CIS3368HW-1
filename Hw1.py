@@ -53,9 +53,6 @@ conn = create_connection("cis3368.cejnvvmjqiep.us-east-2.rds.amazonaws.com", "ad
     #print(user)
 
 
-
-
-
 #create menu
 def menu():
     print('a - Add item')
@@ -66,7 +63,7 @@ def menu():
     print('q - Quit') 
 
 menu()
-option = input('Enter your option')
+option = int(input('Enter your option'))
  #then loop next? 
 
 
