@@ -1,6 +1,9 @@
 import mysql.connector
 from mysql.connector import Error
-
+import datetime
+from datetime import date 
+today = date.today()
+#https://stackabuse.com/how-to-format-dates-in-python/ 
 def create_connection(host_name, user_name, user_password, db_name):
     connection = None
     try:
@@ -37,23 +40,29 @@ def execute_read_query(connection, query):
         print(f"The error '{e}' occurred")
 
 
-conn = create_connection("cis3368.cejnvvmjqiep.us-east-2.rds.amazonaws.com", "admin", "freg2784", "cis3368fall2021") 
-#established successful connection with database. conn is the connection object
+conn = create_connection("cis3368.cejnvvmjqiep.us-east-2.rds.amazonaws.com", "admin", "freg2784", "cis3368fall2021")  #established successful connection with database conn is the connection object
+
 
 # use data and how to sort records(find sorting algorithm and cite/explain) for this assignment 
-#this inserts an entry to table 
-#query = "INSERT INTO shopcart (firstname, lastname) VALUES ('Thomas','Edison')" 
-#execute_query(conn, query)  
-
-#cursor = conn.cursor(dictionary=True)
-#sql = "SELECT * FROM users"
-#cursor.execute(sql)
-#rows = cursor.fetchall()
-#for user in rows:  
-    #print(user)
 
 
-#create menu
+cursor = conn.cursor(dictionary=True)
+sql = "SELECT * FROM shoppinglist"
+cursor.execute(sql)
+rows = cursor.fetchall()
+
+
+def slist():
+    cursor = conn.cursor(dictionary=True)
+    sql = "SELECT * FROM shoppinglist"
+    cursor.execute(sql)
+    rows = cursor.fetchall()
+    for items in rows:  
+         print(items)  
+
+#slist()     # this returns the whole table made
+
+#create the menu
 def menu():
     print('a - Add item')
     print('d - Remove item')
@@ -62,12 +71,52 @@ def menu():
     print('r2- Output all items by sorted by quantity (ascending)')
     print('q - Quit') 
 
-menu()
+menu() #this returns the menu
 option = int(input('Enter your option'))
- #then loop next? 
+
+if option == 'a':
+    add_id = ''
+    add_item_description = ''
+    add_quantity = ''
+    add_current_date = today     #reference current date added 
+    query = "INSERT INTO slist (id, itemdescription, quantity,dateadded) VALUES (%s, '%s', %s, %s)" % (add_id, add_item_description, add_quantity, add_current_date)
+    #execute_query(conn, query)
+    
+elif option == 'd':
+    item_to_delete = ''
+    delete_statement = "DELETE FROM slist WHERE id = %s" % (item_to_delete)   
+    #execute_query(conn, delete_statement)
+    
+elif option == 'u':
+    updated_item_description = '' #update here
+    update_shopping_list = """
+    UPDATE slist
+    SET amount = %s
+    WHERE id = 1 """ % (updated_item_description) 
+    #execute_query(conn, update_shopping_list)
+    
+#elif option == 'r1':
+        #
+    
+
+#elif option == 'r2':
+    #
+
+#elif option == 'q':
+    #break #to quit
 
 
 
 
+
+
+
+
+#this is how the table in sql is called(use for reference  idk  if needed )
+
+#cart = "SELECT * FROM shoppinglist"
+#list = execute_read_query(conn, cart)
+#for cart in list:
+    #print(cart) #ill use this later but without the print
 
 
