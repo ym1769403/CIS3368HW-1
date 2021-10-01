@@ -3,8 +3,8 @@ from mysql.connector import Error
 import datetime
 from datetime import date 
 
-today = date.today() # used to find the current date later used  when adding item in the menu
-#https://stackabuse.com/how-to-format-dates-in-python/  Source used 
+
+
 
 def create_connection(host_name, user_name, user_password, db_name):
     connection = None
@@ -47,10 +47,7 @@ conn = create_connection("cis3368.cejnvvmjqiep.us-east-2.rds.amazonaws.com", "ad
 cursor = conn.cursor(dictionary=True) #to format it as a dictionary 
 sql = "SELECT * FROM shoppinglist"   # this is to fetch the table created from sql workbench 
 cursor.execute(sql)
-rows = cursor.fetchall()
-
-#for items in rows:  # this is if you want to see the table(not needed)
-    #print(items)
+rows = cursor.fetchall() #will later use this(rows) in the function when printing out what has been executred to the databse
 
 #create the menu
 def menu():
@@ -67,15 +64,18 @@ def menu():
             add_id = input('Enter id')
             add_item_description = input('Enter item description')
             add_quantity =  input('Enter item quantity')
-            add_current_date = today     #reference current date added 
+            add_current_date = date.today()     #reference current date added  used to find the current date   when adding item in the menu #https://stackabuse.com/how-to-format-dates-in-python/  Source used 
             query = "INSERT INTO shoppinglist (id, itemdescription, quantity,dateadded) VALUES (%s, '%s', %s, %s)" % (add_id, add_item_description, add_quantity, add_current_date)
             execute_query(conn, query)    
-    
+            print(rows) #to print out the dictionary after the changes have been executed.
+            
+       
         elif option == 'd':
             item_to_delete = input('Enter item to delete')
             delete_statement = "DELETE FROM shoppinglist WHERE id = %s" % (item_to_delete)  #delete item chosen  
             execute_query(conn, delete_statement)
- 
+            print(rows)
+        
         elif option == 'u':
             updated_item_description = input('Enter item to update') #update here
             update_shopping_list = """
@@ -83,15 +83,18 @@ def menu():
             SET amount = %s
             WHERE id = %s """ % (updated_item_description) 
             execute_query(conn, update_shopping_list)
-
+            print(rows)
+        
         elif option == 'r1':    #https://www.w3schools.com/python/python_mysql_orderby.asp  Source used to help with the sorting alphhabeitcally for r1 and r2 
             sql_item = "SELECT * FROM shoppinglist ORDER BY itemdescription"
             execute_query(conn,sql_item)    
-    
+            print(rows)    
+        
         elif option == 'r2':
             sql_quantity = "SELECT * FROM shoppinglist ORDER BY quantity"   #sort by quantity ascending
             execute_query(conn,sql_quantity)
-    
+            print(rows)    
+        
         elif option == 'q':
             break #to quit
 
